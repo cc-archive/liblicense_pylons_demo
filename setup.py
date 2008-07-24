@@ -16,6 +16,8 @@ setup(
         "setuptools",
         "Pylons>=0.9.6.1",
         "SQLAlchemy>=0.4.1",
+        "PILwoTk",
+        #"liblicense",
         ],
     packages=find_packages(exclude=['ez_setup']),
     include_package_data=True,

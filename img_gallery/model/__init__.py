@@ -11,7 +11,8 @@ Session = scoped_session(sessionmaker(autoflush=True, transactional=True,
 metadata = MetaData()
 
 photos_table = Table('photos', metadata,
-                     Column('title', types.Unicode(255), primary_key=True),
+                     Column('id', types.String(100), primary_key=True),
+                     Column('title', types.Unicode(255)),
                      Column('location', types.Text),
                      Column('license', types.Text),
                      )

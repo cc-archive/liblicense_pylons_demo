@@ -1,3 +1,4 @@
 setuptools
 Pylons>=0.9.6.1
 SQLAlchemy>=0.4.1
+PILwoTk
