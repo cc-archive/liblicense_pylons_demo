@@ -10,13 +10,16 @@ class Photo(object):
         self.location = location
 
         self.title = '(untitled)'
-        self.license = '(unlicensed)'
+        self.license = None
 
     def __str__(self):
         return self.title
 
     @property
     def license_name(self):
+        if self.license == None:
+            return '(unlicensed)'
+
         return liblicense.get_name(self.license)
 
     @property

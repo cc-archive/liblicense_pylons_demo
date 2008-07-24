@@ -1,4 +1,6 @@
 import os
+import shutil
+import tempfile
 import logging
 
 from PIL import Image
@@ -13,6 +15,24 @@ class PhotoController(BaseController):
     def add(self):
 
         return render('/photo-add.mako')
+
+    def edit(self, id):
+
+        c.photo = model.Session.query(model.Photo).filter_by(id=id)[0]
+
+        return render('/photo-edit-metadata.mako')
+
+    def save_edits(self, id):
+        photo = model.Session.query(model.Photo).filter_by(id=id)[0]
+
+        print request.params.keys()
+        photo.title = request.params['title']
+        photo.license = request.params['cc_js_result_uri']
+        
+        model.Session.save_or_update(photo)
+        model.Session.commit()
+
+        redirect_to(h.url_for(controller='gallery', action='index'))
 
     def _make_unique_fn(self, upload_dir, image_fn):
         base, extension = os.path.splitext(image_fn)
@@ -62,9 +82,9 @@ class PhotoController(BaseController):
         photo.title = request.params['title']
 
         # !!! liblicense magic
-        photo.license = liblicense.read(photo.location) or '(unlicensed)'
-        #photo.title = liblicense.read(photo.location,
-        #                              "http://purl.org/dc/elements/1.1/title")
+        photo.license = liblicense.read(photo.location)
+        photo.title = liblicense.read(photo.location, liblicense.LL_NAME) or \
+            request.POST['new_image'].filename
 
         # make the thumbnail
         self._make_thumbnail(photo)
@@ -89,3 +109,27 @@ class PhotoController(BaseController):
         response.headers['Content-type'] = "image/jpeg"
 
         return file(photo.thumbnail_location, 'r').read()
+
+    def stamped(self, id):
+        """Return a copy of the image with embedded metadata."""
+
+        photo = model.Session.query(model.Photo).filter_by(id=id)[0]
+
+        # get a temp file name
+        temp_fn = os.path.join(
+            tempfile.gettempdir(), os.path.split(photo.location)[1])
+
+        # copy the image
+        shutil.copyfile(photo.location, temp_fn)
+
+        # add the metadata
+        liblicense.write(temp_fn, 
+                         "http://purl.org/dc/elements/1.1/title", 
+                         photo.title
+                         )
+        liblicense.write(temp_fn, liblicense.LL_LICENSE,
+                         photo.license)
+
+        # serve the file up
+        response.headers['Content-type'] = "image/jpeg"
+        return file(temp_fn, 'r').read()

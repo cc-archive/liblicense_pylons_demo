@@ -7,6 +7,7 @@
 ${h.rails.link_to('add one', 
   h.rails.url_for(controller='photo', action='add'))}?</p>
 % else:
+
 % for p in c.photos:
 <p>
 <a href="${h.url_for(controller='photo', action='static', id=p.id)}">
@@ -15,7 +16,17 @@ ${h.rails.link_to('add one',
 </a>
 </p>
 <p>${p.title}<br/>
-${h.link_to(p.license_name, p.license)}
+${h.link_to(p.license_name, p.license)}<br/>
+${h.link_to('download stamped version',
+h.url_for(controller='photo', action='stamped'))}<br/>
+${h.link_to('edit metadata',
+h.url_for(controller='photo', action='edit', id=p.id))}<br/>
+
 </p>
 % endfor
+
+<br/>
+${h.rails.link_to('add a photo', 
+  h.rails.url_for(controller='photo', action='add'))}</p>
+
 % endif

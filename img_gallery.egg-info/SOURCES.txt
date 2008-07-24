@@ -29,13 +29,9 @@ img_gallery/model/__init__.py
 img_gallery/model/photo.py
 img_gallery/public/index.html
 img_gallery/templates/base.mako
-img_gallery/templates/base.mako~
 img_gallery/templates/gallery-index.mako
-img_gallery/templates/gallery-index.mako~
 img_gallery/templates/photo-add.mako
-img_gallery/templates/photo-add.mako~
 img_gallery/templates/photo-view.mako
-img_gallery/templates/photo-view.mako~
 img_gallery/tests/__init__.py
 img_gallery/tests/test_models.py
 img_gallery/tests/functional/__init__.py
